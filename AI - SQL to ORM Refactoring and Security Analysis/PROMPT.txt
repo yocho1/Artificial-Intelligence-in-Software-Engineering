@@ -1,0 +1,37 @@
+You are a senior Python backend engineer and database security reviewer. Below is a procedural Python script that talks to MySQL using mysql.connector and raw SQL strings. Refactor it into a secure, professional SQLAlchemy ORM version and explain your work.
+
+Original script:
+
+import mysql.connector
+from mysql.connector import Error
+
+def get_connection():
+    """Establish and return a database connection."""
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="yourpassword",
+        database="example_db"
+    )
+
+def create_user(db_cursor, username, email):
+    """Create a new user safely using parameterized queries."""
+    if not username or not email:
+        print("Username and email are required.")
+        return
+    sql = "INSERT INTO users (username, email) VALUES (%s, %s)"
+    try:
+        db_cursor.execute(sql, (username, email))
+        print(f"User '{username}' created successfully.")
+    except Error as e:
+        print(f"Error creating user: {e}")
+
+# ... (rest of the functions: get_user_by_username, update_user_email, delete_user, list_users)
+
+Your response must:
+1. Define the User class as a SQLAlchemy declarative model (id, username, email), with sensible constraints such as a primary key, nullable=False, and a unique username.
+2. Show, with complete runnable code, how to create the table, add a new user, and query for that user using the ORM Session. Also rewrite update_user_email, delete_user and list_users using the ORM.
+3. Load the connection settings from environment variables instead of hard-coding the password, and handle errors with a session rollback.
+4. Explain in detail why the SQLAlchemy ORM version is more professional and more secure than using raw SQL with string formatting. Cover SQL injection (give a short example of a vulnerable f-string query versus the ORM equivalent), parameter binding, maintainability, readability, testability, portability between database engines, and reduced boilerplate.
+
+Present the answer in this order: refactored code first, then a step-by-step usage example, then the security and professional-benefits explanation.
